@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; 
+
 $required_message = ' plugin is required. Please install &amp; activate in this site.';
 
 if ( !is_plugin_active( 'wp-media-categories/wp-media-categories.php' ) || !is_plugin_active( 'filebird-wordpress-media-library-folders/filebird.php' )){

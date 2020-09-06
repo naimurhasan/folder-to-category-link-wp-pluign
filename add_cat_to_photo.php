@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 $posts = get_posts( array(
 		    'post_type'    => 'attachment',
 		    'post_status' => 'inherit',
@@ -16,18 +18,26 @@ $posts = get_posts( array(
 			)
 		);
 
+
+// attach category if update post cat button clicked
+if(isset($_POST['update_photos_category'])){
+	foreach ($posts as $post) {
+		$terms = get_the_terms($post->ID, 'nt_wmc_folder');
+		$cat_id = get_option('cat_for_folder_'.$terms[0]->term_id);
+		wp_set_post_terms($post->ID, array($cat_id), 'media_category' );	
+	}
+	$posts = [];
+}
+
 $post_show_count = 0;
 foreach ($posts as $post) {
 		$post_show_count++;
 		echo wp_get_attachment_image( $post->ID, 'medium');
-		$terms = get_the_terms($post->ID, 'nt_wmc_folder');
 		// echo "<PRE>";
 		// print_r($terms);
 		// echo "</PRE>";
 
 		// echo "NEED TO APPLY THE CATEGORY OF";
-		$cat_id = get_option('cat_for_folder_'.$terms[0]->term_id);
-		wp_set_post_terms($post->ID, array($cat_id), 'media_category' );
 		// echo $cat_id;
 		// echo "<br>";
 		if($post_show_count>1){

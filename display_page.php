@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; 
 
 echo '<h2>Add Category to Photos</h2>';
 include_once('add_cat_to_photo.php');

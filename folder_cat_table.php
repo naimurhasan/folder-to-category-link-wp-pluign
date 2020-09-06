@@ -1,11 +1,21 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 $folders = get_terms(array('taxonomy' => 'nt_wmc_folder', 'hide_empty' => false));
 
 // !!!CAREFUL: IF folder_cat map update request submitted
 if(isset($_POST['update_folder_cat_link'])){
 	foreach ($folders as $folder) {
-		if(isset($_POST[$folder->term_id])){
-			update_option('cat_for_folder_'.$folder->term_id, $_POST[$folder->term_id]);
+		if(isset($_POST[$folder->term_id]) && $_POST[$folder->term_id] != ''){
+
+			// sanitizing post data before use
+			$cat_id_of_folder = (int)$_POST[$folder->term_id];
+
+			if (!filter_var($cat_id_of_folder, FILTER_VALIDATE_INT)) {
+				break;
+			}
+
+			update_option('cat_for_folder_'.$folder->term_id, $cat_id_of_folder);
 		}else{
 			delete_option('cat_for_folder_'.$folder->term_id);
 		}
@@ -16,6 +26,7 @@ if(isset($_POST['update_folder_cat_link'])){
 // Making a function '$nhn_cat_options' to show category select box 
 $media_cats = get_terms(array('taxonomy' => 'media_category', 'hide_empty' => false));
 
+$cat_sel_box = '';
 foreach ($media_cats as $mcat) {
 	$cat_sel_box .= "<option value=\"".$mcat->term_id."\">".$mcat->name." (id:".$mcat->term_id.")</option>";
 }
